@@ -1,9 +1,9 @@
-import openai
+from openai import OpenAI
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Charge les variables d'environnement à partir du fichier .env
-load_dotenv()
+# load_dotenv()
 
 def read_text_from_file(file_path):
     """
@@ -25,25 +25,29 @@ def gpt4_summary(text, openai_api_key):
     :param openai_api_key: Clé API pour OpenAI.
     :return: Résumé du texte.
     """
-    openai.api_key = os.getenv("GPT4-KEY")
+
+    client =  OpenAI(api_key='')
 
     try:
-        response = openai.Completion.create(
-          engine="gpt-4",  # Assurez-vous que "gpt-4" est le bon nom du modèle au moment de l'exécution
-          prompt=f"Résume ce qui suit :\n\n{text}",
-          temperature=0.5,
-          max_tokens=150,
-          top_p=1.0,
-          frequency_penalty=0.0,
-          presence_penalty=0.0
+        response = client.chat.completions.create(
+            model="gpt-4",  # Assurez-vous que "gpt-4" est le bon nom du modèle au moment de l'exécution
+            messages=[
+                {"role": "system", "content": "Résume ce qui suit :"},
+                {"role": "user", "content": text}
+            ],
+            temperature=0.5,
+            max_tokens=150,
+            top_p=1.0,
+            frequency_penalty=0.0,
+            presence_penalty=0.0
         )
-        return response.choices[0].text.strip()
+        return(response.choices[0].message.content)
     except Exception as e:
-        return f"Une erreur est survenue : {e}"
+        print(f"Une erreur est survenue : {e}")
 
 # Exemple d'utilisation
 if __name__ == "__main__":
-    file_path = "global_article.txt"  # Assurez-vous que le chemin vers le fichier est correct
+    file_path = "global_article_summary.txt"  # Assurez-vous que le chemin vers le fichier est correct
     openai_api_key = "votre_clé_api_openai_ici"  # Remplacez par votre clé API OpenAI
     text = read_text_from_file(file_path)
     
