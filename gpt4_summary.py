@@ -27,7 +27,6 @@ def gpt4_summary(text, openai_api_key):
     """
 
     client =  OpenAI(api_key='')
-    # openai.api_key = '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'
 
     try:
         response = client.chat.completions.create(
