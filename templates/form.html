@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Contact</title>
+</head>
+<body>
+    <h1>Recherche Sujet</h1>
+    <form id="monFormulaire" method="post">
+        <label for="sujet">Sujet :</label><br>
+        <input type="text" id="sujet" name="sujet" required><br><br>
+
+        <label>Choisissez les services :</label><br>
+        <input type="checkbox" id="manuel" name="manuel" value="User Manuel">
+        <label for="manuel">User Manuel</label><br>
+
+        <input type="checkbox" id="summary" name="summary" value="Summary">
+        <label for="summary">Summary</label><br>
+
+        <input type="checkbox" id="tutorial" name="tutorial" value="Complet tutorial">
+        <label for="tutorial">Complet tutorial</label><br><br>
+
+        <input type="submit" value="Envoyer">
+    </form>
+    <script>
+        document.getElementById("monFormulaire").addEventListener("submit", function(event) {
+            event.preventDefault();  // Empêche l'envoi du formulaire
+
+            // Tableau pour stocker les valeurs cochées
+            let valeurs = {};
+
+            // Récupérer toutes les cases à cocher avec le nom "services"
+            const cases = document.querySelectorAll('input[type="checkbox"]:checked');
+            
+            // Pour chaque case cochée, ajouter sa valeur au tableau
+            cases.forEach(function(caseCocher) {
+                valeurs[caseCocher.name] = true;
+            });
+
+            // Envoyer les valeurs au script Python côté serveur (à remplacer par votre URL de script)
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'  // Définir le type de contenu comme JSON
+                },
+                body: JSON.stringify(valeurs)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Données envoyées avec succès !');
+                } else {
+                    console.error('Erreur lors de l\'envoi des données.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'envoi des données :', error);
+            });
+        });
+    </script>
+</body>
+</html>
+

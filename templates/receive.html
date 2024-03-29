@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire de Contact</title>
+</head>
+<body>envoye</h1>
+    <form action="/submit" method="post">
+        <label for="sujet">SDonne envoyes avec succes</label><br>
+        <input type="text" id="sujet" name="sujet" required><br><br>
+    </form>
+    <script>
+        document.getElementById("monFormulaire").addEventListener("submit", function(event) {
+            event.preventDefault();  // Empêche l'envoi du formulaire
+
+            // Tableau pour stocker les valeurs cochées
+            let valeurs = {};
+
+            // Récupérer toutes les cases à cocher avec le nom "services"
+            const cases = document.querySelectorAll('input[name="services"]:checked');
+            
+            // Pour chaque case cochée, ajouter sa valeur au tableau
+            cases.forEach(function(caseCocher) {
+                valeurs[caseCocher.value] = true;
+            });
+
+            // Envoyer les valeurs au script Python côté serveur (à remplacer par votre URL de script)
+            fetch('/mon_script_python', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(valeurs)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Données envoyées avec succès !');
+                } else {
+                    console.error('Erreur lors de l\'envoi des données.');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur lors de l\'envoi des données :', error);
+            });
+        });
+    </script>
+</body>
+</html>
